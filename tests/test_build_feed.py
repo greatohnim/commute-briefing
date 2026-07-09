@@ -12,6 +12,7 @@ def test_list_episodes_filters_and_sorts(tmp_path):
 
 
 def test_build_feed_has_channel_and_items():
+    import xml.etree.ElementTree as ET
     cfg = {
         "podcast": {
             "title": "출근길 AI 브리핑", "author": "jhoh",
@@ -22,8 +23,14 @@ def test_build_feed_has_channel_and_items():
     }
     eps = [{"date": "2026-07-09", "filename": "2026-07-09.mp3"}]
     xml = build_feed(eps, cfg, duration_fn=lambda fn: 300)
-    assert "<rss" in xml and "itunes" in xml
-    assert "<title>출근길 AI 브리핑</title>" in xml
-    assert "https://u.github.io/commute-briefing/audio/2026-07-09.mp3" in xml
-    assert "<itunes:duration>300</itunes:duration>" in xml
-    assert 'url="https://u.github.io/commute-briefing/assets/cover.png"' in xml
+
+    root = ET.fromstring(xml)  # raises if not well-formed
+    ns = {"itunes": "http://www.itunes.com/dtds/podcast-1.0.dtd"}
+    channel = root.find("channel")
+    assert channel.find("title").text == "출근길 AI 브리핑"
+    # standard RSS <image> MUST use a <url> child element, not a url attribute
+    assert channel.find("image/url").text == "https://u.github.io/commute-briefing/assets/cover.png"
+    assert channel.find("itunes:image", ns).get("href") == "https://u.github.io/commute-briefing/assets/cover.png"
+    item = channel.find("item")
+    assert item.find("enclosure").get("url") == "https://u.github.io/commute-briefing/audio/2026-07-09.mp3"
+    assert item.find("itunes:duration", ns).text == "300"

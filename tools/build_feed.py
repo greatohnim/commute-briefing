@@ -3,7 +3,7 @@ import re
 import sys
 from datetime import date, datetime, time, timedelta, timezone
 from email.utils import format_datetime
-from xml.sax.saxutils import escape
+from xml.sax.saxutils import escape, quoteattr
 
 KST = timezone(timedelta(hours=9))
 DATE_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})\.mp3$")
@@ -45,7 +45,7 @@ def build_feed(episodes, cfg, duration_fn):
         title = f"{e['date']} 출근길 AI 브리핑"
         items.append(f"""    <item>
       <title>{escape(title)}</title>
-      <enclosure url="{escape(url)}" type="audio/mpeg" length="0"/>
+      <enclosure url={quoteattr(url)} type="audio/mpeg" length="0"/>
       <guid isPermaLink="false">{escape(e['filename'])}</guid>
       <pubDate>{pub}</pubDate>
       <itunes:duration>{dur}</itunes:duration>
@@ -59,8 +59,8 @@ def build_feed(episodes, cfg, duration_fn):
     <language>{escape(p['language'])}</language>
     <description>{escape(p['description'])}</description>
     <itunes:author>{escape(p['author'])}</itunes:author>
-    <itunes:image href="{escape(cover)}"/>
-    <image url="{escape(cover)}"><title>{escape(p['title'])}</title><link>{escape(base)}</link></image>
+    <itunes:image href={quoteattr(cover)}/>
+    <image><url>{escape(cover)}</url><title>{escape(p['title'])}</title><link>{escape(base)}</link></image>
 {chr(10).join(items)}
   </channel>
 </rss>
