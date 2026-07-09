@@ -1,0 +1,5 @@
+edge-tts==6.1.9
+mutagen==1.47.0
+PyYAML==6.0.2
+pytest==8.3.3
+gTTS==2.5.3
