@@ -21,3 +21,11 @@ episode: 12
     assert "첫 번째 헤드라인입니다." in out
     assert "두 번째 헤드라인입니다." in out
     assert "1)" not in out and "2." not in out
+
+
+def test_strips_marker_before_direction_regardless_of_order():
+    md = "1) (오늘의 AI) 실제 내용입니다.\n"
+    out = extract_narration(md)
+    assert "실제 내용입니다." in out
+    assert "(오늘의 AI)" not in out
+    assert "1)" not in out

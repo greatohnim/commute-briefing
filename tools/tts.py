@@ -15,8 +15,15 @@ def extract_narration(md_text):
         line = raw.strip()
         if not line:
             continue
-        line = re.sub(r"^\([^)]*\)\s*", "", line).strip()   # 앞 지문
-        line = re.sub(r"^\d+[\).]\s*", "", line).strip()     # 목록 마커
+        # 앞 지문 (...)과 목록 마커 1)/1. 를 순서에 무관하게 제거
+        # (예: "1) (오늘의 AI) 텍스트" 처럼 마커가 지문보다 앞서도 둘 다 제거)
+        while True:
+            stripped = re.sub(r"^\([^)]*\)\s*", "", line)      # 앞 지문
+            stripped = re.sub(r"^\d+[\).]\s*", "", stripped)   # 목록 마커
+            stripped = stripped.strip()
+            if stripped == line:
+                break
+            line = stripped
         if not line:
             continue
         out_lines.append(line)
