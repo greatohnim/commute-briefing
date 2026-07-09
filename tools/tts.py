@@ -1,4 +1,49 @@
+import asyncio
 import re
+import sys
+
+import edge_tts
+
+from tools.common import load_config
+
+
+def _synth_edge(text, out_path, voice, rate):
+    async def run():
+        communicate = edge_tts.Communicate(text, voice=voice, rate=rate)
+        await communicate.save(out_path)
+
+    asyncio.run(run())
+
+
+def _synth_gtts(text, out_path, voice, rate):
+    from gtts import gTTS
+
+    gTTS(text=text, lang="ko").save(out_path)
+
+
+def synthesize(text, out_path, voice, rate):
+    """edge-tts로 변환, 실패 시 gTTS로 폴백. 사용 엔진명을 반환."""
+    for name, fn in (("edge", _synth_edge), ("gtts", _synth_gtts)):
+        try:
+            fn(text, out_path, voice, rate)
+            return name
+        except Exception as e:  # noqa: BLE001 — 폴백 목적의 광범위 캐치
+            print(f"[tts] {name} 실패: {e}", file=sys.stderr)
+    raise RuntimeError("모든 TTS 엔진 실패")
+
+
+def main():
+    script_path, out_path = sys.argv[1], sys.argv[2]
+    cfg = load_config("config.yaml")
+    with open(script_path, "r", encoding="utf-8") as f:
+        md = f.read()
+    text = extract_narration(md)
+    engine = synthesize(text, out_path, cfg["tts"]["voice"], cfg["tts"]["rate"])
+    print(f"[tts] {out_path} 생성 완료 (engine={engine})")
+
+
+if __name__ == "__main__":
+    main()
 
 
 def extract_narration(md_text):
