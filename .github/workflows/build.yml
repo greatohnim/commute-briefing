@@ -1,0 +1,48 @@
+name: build-and-publish
+
+on:
+  push:
+    paths:
+      - "scripts/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Find latest script
+        id: latest
+        run: |
+          f=$(ls scripts/*.md | sort | tail -n 1)
+          d=$(basename "$f" .md)
+          echo "script=$f" >> "$GITHUB_OUTPUT"
+          echo "date=$d" >> "$GITHUB_OUTPUT"
+
+      - name: Validate script
+        run: python -m tools.validate_script "${{ steps.latest.outputs.script }}"
+
+      - name: Synthesize audio
+        run: python -m tools.tts "${{ steps.latest.outputs.script }}" "docs/audio/${{ steps.latest.outputs.date }}.mp3"
+
+      - name: Rebuild feed
+        run: python -m tools.build_feed "${{ steps.latest.outputs.date }}"
+
+      - name: Commit results
+        run: |
+          git config user.name "briefing-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add docs/audio docs/feed.xml
+          git commit -m "build: ${{ steps.latest.outputs.date }} 음성·피드 발행" || echo "변경 없음"
+          git push
