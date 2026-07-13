@@ -56,7 +56,7 @@ def test_cli_entrypoint_runs_as_main(monkeypatch, tmp_path):
     script.write_text(
         "---\ndate: 2026-07-09\n---\n\n(인트로) 안녕하세요.\n", encoding="utf-8"
     )
-    out = tmp_path / "out.mp3"
+    out = tmp_path / "docs" / "audio" / "out.mp3"
     monkeypatch.setattr(sys, "argv", ["tools.tts", str(script), str(out)])
 
     with warnings.catch_warnings():

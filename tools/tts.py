@@ -1,4 +1,5 @@
 import asyncio
+import os
 import re
 import sys
 
@@ -63,6 +64,9 @@ def synthesize(text, out_path, voice, rate):
 
 def main():
     script_path, out_path = sys.argv[1], sys.argv[2]
+    out_dir = os.path.dirname(out_path)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
     cfg = load_config("config.yaml")
     with open(script_path, "r", encoding="utf-8") as f:
         md = f.read()

@@ -73,6 +73,7 @@ def main():
     today = sys.argv[1]
     cfg = load_config("config.yaml")
     audio_dir = "docs/audio"
+    os.makedirs(audio_dir, exist_ok=True)
     eps = list_episodes(audio_dir, cfg["feed"]["keep_days"], today)
     xml = build_feed(eps, cfg, duration_fn=_duration_mutagen(audio_dir))
     with open("docs/feed.xml", "w", encoding="utf-8") as f:
