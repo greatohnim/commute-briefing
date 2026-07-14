@@ -2,7 +2,7 @@ podcast:
   title: "출근길 AI 브리핑"
   author: "jhoh"
   description: "매일 아침, 출근길에 듣는 AI 중심 기술 브리핑."
-  base_url: "https://CHANGEME.github.io/commute-briefing"   # 배포 태스크에서 실제 계정으로 교체
+  base_url: "https://greatohnim.github.io/commute-briefing"
   language: "ko"
   cover: "assets/cover.png"
 tts:
