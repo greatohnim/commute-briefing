@@ -1,6 +1,13 @@
 {
-  "streak": 0,
-  "last_episode_date": null,
-  "total_episodes": 0,
-  "history": []
+  "streak": 1,
+  "last_episode_date": "2026-07-14",
+  "total_episodes": 1,
+  "history": [
+    {
+      "date": "2026-07-14",
+      "episode": 1,
+      "streak": 1
+    }
+  ],
+  "episode": 1
 }
