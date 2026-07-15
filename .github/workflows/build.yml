@@ -5,6 +5,7 @@ on:
     paths:
       - "scripts/**"
       - "config.yaml"
+      - "requirements.txt"
   workflow_dispatch:
 
 permissions:
