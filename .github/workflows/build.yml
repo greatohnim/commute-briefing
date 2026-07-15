@@ -6,6 +6,7 @@ on:
       - "scripts/**"
       - "config.yaml"
       - "requirements.txt"
+      - "tools/**"
   workflow_dispatch:
 
 permissions:

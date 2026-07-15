@@ -32,7 +32,18 @@ def _duration_mutagen(audio_dir):
     return fn
 
 
-def build_feed(episodes, cfg, duration_fn):
+def _version_content(audio_dir):
+    """mp3 내용 해시(앞 8자리)를 반환. 음성이 바뀌면 guid도 바뀌게 하기 위함."""
+    import hashlib
+
+    def fn(filename):
+        with open(os.path.join(audio_dir, filename), "rb") as f:
+            return hashlib.md5(f.read()).hexdigest()[:8]
+
+    return fn
+
+
+def build_feed(episodes, cfg, duration_fn, version_fn=None):
     p = cfg["podcast"]
     base = p["base_url"].rstrip("/")
     items = []
@@ -42,11 +53,16 @@ def build_feed(episodes, cfg, duration_fn):
             datetime.combine(date.fromisoformat(e["date"]), time(6, 0), KST)
         )
         dur = duration_fn(e["filename"])
+        # guid에 내용 버전을 붙여, 파일명이 같아도 음성이 바뀌면 팟캐스트 앱이
+        # 새 회차로 인식해 다시 받도록 한다. enclosure URL은 실제 파일 그대로 둔다.
+        guid = e["filename"]
+        if version_fn is not None:
+            guid = f"{guid}#{version_fn(e['filename'])}"
         title = f"{e['date']} 출근길 AI 브리핑"
         items.append(f"""    <item>
       <title>{escape(title)}</title>
       <enclosure url={quoteattr(url)} type="audio/mpeg" length="0"/>
-      <guid isPermaLink="false">{escape(e['filename'])}</guid>
+      <guid isPermaLink="false">{escape(guid)}</guid>
       <pubDate>{pub}</pubDate>
       <itunes:duration>{dur}</itunes:duration>
     </item>""")
@@ -75,7 +91,12 @@ def main():
     audio_dir = "docs/audio"
     os.makedirs(audio_dir, exist_ok=True)
     eps = list_episodes(audio_dir, cfg["feed"]["keep_days"], today)
-    xml = build_feed(eps, cfg, duration_fn=_duration_mutagen(audio_dir))
+    xml = build_feed(
+        eps,
+        cfg,
+        duration_fn=_duration_mutagen(audio_dir),
+        version_fn=_version_content(audio_dir),
+    )
     with open("docs/feed.xml", "w", encoding="utf-8") as f:
         f.write(xml)
     print(f"[feed] {len(eps)}개 회차로 docs/feed.xml 갱신")
