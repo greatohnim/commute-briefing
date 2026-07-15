@@ -6,8 +6,8 @@ podcast:
   language: "ko"
   cover: "assets/cover.png"
 tts:
-  voice: "ko-KR-InJoonNeural"
-  rate: "-5%"
+  voice: "ko-KR-SunHiNeural"
+  rate: "+5%"
 feed:
   keep_days: 90
 script:

@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "scripts/**"
+      - "config.yaml"
   workflow_dispatch:
 
 permissions:
