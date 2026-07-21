@@ -6,12 +6,16 @@
     <language>ko</language>
     <description>매일 아침, 출근길에 듣는 AI 중심 기술 브리핑.</description>
     <itunes:author>jhoh</itunes:author>
+    <itunes:summary>매일 아침, 출근길에 듣는 AI 중심 기술 브리핑.</itunes:summary>
+    <itunes:type>episodic</itunes:type>
+    <itunes:explicit>false</itunes:explicit>
+    <itunes:category text="Technology"/>
     <itunes:image href="https://greatohnim.github.io/commute-briefing/assets/cover.png"/>
     <image><url>https://greatohnim.github.io/commute-briefing/assets/cover.png</url><title>출근길 AI 브리핑</title><link>https://greatohnim.github.io/commute-briefing</link></image>
     <item>
       <title>2026-07-14 출근길 AI 브리핑</title>
       <enclosure url="https://greatohnim.github.io/commute-briefing/audio/2026-07-14.mp3" type="audio/mpeg" length="0"/>
-      <guid isPermaLink="false">2026-07-14.mp3#1ad50267</guid>
+      <guid isPermaLink="false">2026-07-14.mp3#04b5f724</guid>
       <pubDate>Tue, 14 Jul 2026 06:00:00 +0900</pubDate>
       <itunes:duration>113</itunes:duration>
     </item>
