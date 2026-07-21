@@ -5,6 +5,8 @@ podcast:
   base_url: "https://greatohnim.github.io/commute-briefing"
   language: "ko"
   cover: "assets/cover.png"
+  category: "Technology"
+  explicit: false
 tts:
   voice: "ko-KR-SunHiNeural"
   rate: "+5%"

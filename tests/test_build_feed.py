@@ -31,6 +31,9 @@ def test_build_feed_has_channel_and_items():
     # standard RSS <image> MUST use a <url> child element, not a url attribute
     assert channel.find("image/url").text == "https://u.github.io/commute-briefing/assets/cover.png"
     assert channel.find("itunes:image", ns).get("href") == "https://u.github.io/commute-briefing/assets/cover.png"
+    # Apple 필수 태그(카테고리·explicit) — 기본값 적용
+    assert channel.find("itunes:explicit", ns).text == "false"
+    assert channel.find("itunes:category", ns).get("text") == "Technology"
     item = channel.find("item")
     assert item.find("enclosure").get("url") == "https://u.github.io/commute-briefing/audio/2026-07-09.mp3"
     assert item.find("itunes:duration", ns).text == "300"

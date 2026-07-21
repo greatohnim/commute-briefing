@@ -67,6 +67,8 @@ def build_feed(episodes, cfg, duration_fn, version_fn=None):
       <itunes:duration>{dur}</itunes:duration>
     </item>""")
     cover = f"{base}/{p['cover']}"
+    explicit = "true" if p.get("explicit") else "false"
+    category = p.get("category", "Technology")
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
   <channel>
@@ -75,6 +77,10 @@ def build_feed(episodes, cfg, duration_fn, version_fn=None):
     <language>{escape(p['language'])}</language>
     <description>{escape(p['description'])}</description>
     <itunes:author>{escape(p['author'])}</itunes:author>
+    <itunes:summary>{escape(p['description'])}</itunes:summary>
+    <itunes:type>episodic</itunes:type>
+    <itunes:explicit>{explicit}</itunes:explicit>
+    <itunes:category text={quoteattr(category)}/>
     <itunes:image href={quoteattr(cover)}/>
     <image><url>{escape(cover)}</url><title>{escape(p['title'])}</title><link>{escape(base)}</link></image>
 {chr(10).join(items)}
